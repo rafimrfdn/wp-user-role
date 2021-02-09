@@ -1,0 +1,33 @@
+/**
+* Activate only this function when first time install the wordpress site who want to add user capabilities
+* Add read_private_posts capability to subscriber
+* Note this is saves capability to the database on admin_init, so consider doing this once on theme/plugin activation
+*/
+add_action ('admin_init','add_sub_caps');
+
+function add_sub_caps() {
+	global $wp_roles;
+	$role = get_role('subscriber');
+	$role->add_cap('read_private_posts');
+}
+
+
+/**
+ * Activate this code if you want to disable the following function above.
+ * It will don't let editors read private posts.
+ *
+ * An alternative using WP_Roles instead of WP_Role.
+ *
+ * You should call the function when your plugin is activated.
+ *
+ * @uses $wp_roles
+ * @uses WP_Roles::remove_cap()
+ */
+function remove_editor_read_private_posts(){
+ 
+    // $wp_roles is an instance of WP_Roles.
+    global $wp_roles;
+    $wp_roles->remove_cap( 'subscriber', 'read_private_posts' );
+}
+
+add_action ('admin_init','remove_editor_read_private_posts');
